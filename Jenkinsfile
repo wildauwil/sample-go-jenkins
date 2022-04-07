@@ -1,21 +1,33 @@
-node {
-    // Ensure the desired Go version is installed
-    def root = "/usr/local/go/bin/go"
+pipeline {
+    agent any
+    environment {
+        root = "/usr/local/go/bin/go"
+        scmUrl = "https://github.com/wildauwil/sample-go-jenkins.git"
+    }
 
-    // Export environment variables pointing to the directory where Go was installed
-    
-    stage 'Checkout'
-    git url: 'https://github.com/wildauwil/sample-go-jenkins.git'
+    stages{
+        stage("Go Version") {
+            steps{
+                sh "${root} version"
+            }
+        }
 
-    stage 'preTest'
-    sh "${root} version"
+        stage("Git Clone") {
+            steps{
+                git url: '${scmUrl}'
+            }
+        }
 
-    stage 'Test'
-    sh "${root} test ./... -cover"
+        stage("Go Test") {
+            steps{
+                sh "${root} test ./... -cover"
+            }
+        }
 
-    stage 'Build'
-    sh "${root} build ./..."
-
-    stage 'Deploy'
-    
+        stage("Go Build") {
+            steps{
+                sh "${root} build ./..."
+            }
+        }
+    }
 }
