@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         root = "/usr/local/go/bin/go"
+        branch = "master"
         scmUrl = "https://github.com/wildauwil/sample-go-jenkins.git"
     }
 
@@ -14,7 +15,7 @@ pipeline {
 
         stage("Git Clone") {
             steps{
-                git url: '${scmUrl}'
+                git branch: "${branch}", url: "${scmUrl}"
             }
         }
 
